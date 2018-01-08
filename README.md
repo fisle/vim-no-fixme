@@ -4,6 +4,10 @@ This plugin provides amount of FIXME|TODO|XXX comments in current file for the [
 
 
 
+![screenshot](./preview.png)
+
+
+
 ## Installation
 
 Install using a plugin manager by adding `fisle/vim-no-fixme`

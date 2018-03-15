@@ -7,11 +7,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-" Default tokens
-if !exists('g:fixmeTokenList')
-    let g:fixmeTokenList = ["FIXME", "TODO", "XXX"]
-endif
-
 function! nofixme#amount() abort
     redir => b:output
     silent call nofixme#grep()

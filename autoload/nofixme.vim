@@ -8,6 +8,10 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! nofixme#amount() abort
+    if !&modifiable
+        return ''
+    endif
+    
     try
         redir => b:output
         silent call nofixme#grep("TODO")

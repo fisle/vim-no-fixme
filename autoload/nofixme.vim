@@ -8,35 +8,36 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! nofixme#amount() abort
-    redir => b:output
-    silent call nofixme#grep("TODO")
-    redir END
     try
+        redir => b:output
+        silent call nofixme#grep("TODO")
+        redir END
         let b:count = split(b:output)[0]
         return b:count . " TODO"
     catch E684
         let b:count = 0
     endtry
     
-    redir => b:output
-    silent call nofixme#grep("FIXME")
-    redir END
     try
+        redir => b:output
+        silent call nofixme#grep("FIXME")
+        redir END
         let b:count = split(b:output)[0]
         return b:count . " FIXME"
     catch E684
         let b:count = 0
     endtry
     
-    redir => b:output
-    silent call nofixme#grep("XXX")
-    redir END
     try
+        redir => b:output
+        silent call nofixme#grep("XXX")
+        redir END
         let b:count = split(b:output)[0]
         return b:count . " XXX"
     catch E684
         let b:count = 0
     endtry
+    return ''
 endfunction
 
 function! nofixme#grep(tag) abort

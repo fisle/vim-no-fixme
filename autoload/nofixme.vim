@@ -9,22 +9,39 @@ set cpo&vim
 
 function! nofixme#amount() abort
     redir => b:output
-    silent call nofixme#grep()
+    silent call nofixme#grep("TODO")
     redir END
-
     try
         let b:count = split(b:output)[0]
+        return b:count . " TODO"
     catch E684
-        " If splitting fails, return 0
         let b:count = 0
     endtry
-
-    return b:count == 0 ? '' : b:count . "XXX"
+    
+    redir => b:output
+    silent call nofixme#grep("FIXME")
+    redir END
+    try
+        let b:count = split(b:output)[0]
+        return b:count . " FIXME"
+    catch E684
+        let b:count = 0
+    endtry
+    
+    redir => b:output
+    silent call nofixme#grep("XXX")
+    redir END
+    try
+        let b:count = split(b:output)[0]
+        return b:count . " XXX"
+    catch E684
+        let b:count = 0
+    endtry
 endfunction
 
-function! nofixme#grep() abort
+function! nofixme#grep(tag) abort
     try
-        exec '%s/\(FIXME\|TODO\|XXX\)//ng'
+        exec "%s/" . a:tag . "//ng"
     catch E486
         " Catch pattern not found
         return ''

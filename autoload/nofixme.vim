@@ -8,23 +8,46 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! nofixme#amount() abort
-    redir => b:output
-    silent call nofixme#grep()
-    redir END
-
+    if !&modifiable
+        return ''
+    endif
+    let line = ''
+    
     try
+        redir => b:output
+        silent call nofixme#grep("TODO")
+        redir END
         let b:count = split(b:output)[0]
+        let line = line . b:count . " TODO "
     catch E684
-        " If splitting fails, return 0
         let b:count = 0
     endtry
-
-    return b:count == 0 ? '' : b:count . "XXX"
+    
+    try
+        redir => b:output
+        silent call nofixme#grep("FIXME")
+        redir END
+        let b:count = split(b:output)[0]
+        let line = line . b:count . " FIXME "
+    catch E684
+        let b:count = 0
+    endtry
+    
+    try
+        redir => b:output
+        silent call nofixme#grep("XXX")
+        redir END
+        let b:count = split(b:output)[0]
+        let line = line . b:count . " XXX "
+    catch E684
+        let b:count = 0
+    endtry
+    return line
 endfunction
 
-function! nofixme#grep() abort
+function! nofixme#grep(tag) abort
     try
-        exec '%s/\(FIXME\|TODO\|XXX\)//ng'
+        exec "%s/" . a:tag . "//ng"
     catch E486
         " Catch pattern not found
         return ''

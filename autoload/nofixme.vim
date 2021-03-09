@@ -11,13 +11,14 @@ function! nofixme#amount() abort
     if !&modifiable
         return ''
     endif
+    let line = ''
     
     try
         redir => b:output
         silent call nofixme#grep("TODO")
         redir END
         let b:count = split(b:output)[0]
-        return b:count . " TODO"
+        let line = line . b:count . " TODO "
     catch E684
         let b:count = 0
     endtry
@@ -27,7 +28,7 @@ function! nofixme#amount() abort
         silent call nofixme#grep("FIXME")
         redir END
         let b:count = split(b:output)[0]
-        return b:count . " FIXME"
+        let line = line . b:count . " FIXME "
     catch E684
         let b:count = 0
     endtry
@@ -37,11 +38,11 @@ function! nofixme#amount() abort
         silent call nofixme#grep("XXX")
         redir END
         let b:count = split(b:output)[0]
-        return b:count . " XXX"
+        let line = line . b:count . " XXX "
     catch E684
         let b:count = 0
     endtry
-    return ''
+    return line
 endfunction
 
 function! nofixme#grep(tag) abort
